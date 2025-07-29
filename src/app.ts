@@ -94,7 +94,7 @@ app.post("/approve", async (c) => {
 		},
 	});
 
-	c.env.OAUTH_STRIPE_MCP_KV.put(email, redirectTo);
+	c.env.OAUTH_KV.put(email, redirectTo);
 	return c.html(
 		layout(
 			await renderAuthorizationApprovedContent(redirectTo),

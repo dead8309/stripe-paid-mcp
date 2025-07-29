@@ -26,10 +26,10 @@
 		]
 	},
 	"kv_namespaces": [
-		{
-			"binding": "OAUTH_STRIPE_MCP_KV",
-			"id": "a39ce72a34e24176858b5d40be6a2698"
-		}
+          {
+      "binding": "OAUTH_KV",
+      "id": "8fe36673a53042119eba88fd517abad9"
+    }
 	],
 	"observability": {
 		"enabled": true
