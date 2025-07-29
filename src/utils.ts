@@ -1,11 +1,11 @@
-import {html, raw} from 'hono/html';
-import type {HtmlEscapedString} from 'hono/utils/html';
-import type {AuthRequest} from '@cloudflare/workers-oauth-provider';
+import { html, raw } from "hono/html";
+import type { HtmlEscapedString } from "hono/utils/html";
+import type { AuthRequest } from "@cloudflare/workers-oauth-provider";
 
 export const layout = (
-  content: HtmlEscapedString | string,
-  title: string,
-  terminal_title?: string
+	content: HtmlEscapedString | string,
+	title: string,
+	terminal_title?: string,
 ) => html`
   <!DOCTYPE html>
   <html lang="en">
@@ -187,7 +187,7 @@ export const layout = (
               <div class="terminal-dot !rounded-full bg-[#f59e0b] size-3"></div>
               <div class="terminal-dot !rounded-full bg-[#10b981] size-3"></div>
               <span class="text-dark-500 text-sm font-mono ml-4"
-                >${terminal_title ?? '~/mcp-marketplace'}</span
+                >${terminal_title ?? "~/mcp-marketplace"}</span
               >
             </div>
             <div class="p-8">
@@ -216,14 +216,14 @@ export const layout = (
 `;
 
 export const homeContent = async (req: Request): Promise<HtmlEscapedString> => {
-  return html` <div class="max-w-4xl mx-auto markdown">Hi</div> `;
+	return html` <div class="max-w-4xl mx-auto markdown">Hi</div> `;
 };
 
 export const renderLoggedInAuthorizeScreen = async (
-  oauthScopes: {name: string; description: string}[],
-  oauthReqInfo: AuthRequest
+	oauthScopes: { name: string; description: string }[],
+	oauthReqInfo: AuthRequest,
 ) => {
-  return html`
+	return html`
     <div class="border-b border-dark-200 pb-4 mb-6">
       <h1
         class="text-xl font-mono font-bold text-white uppercase tracking-wider"
@@ -240,7 +240,7 @@ export const renderLoggedInAuthorizeScreen = async (
       </h2>
       <ul class="space-y-3">
         ${oauthScopes.map(
-          (scope) => html`
+					(scope) => html`
             <li class="flex items-start bg-dark-50 border border-dark-200 p-3">
               <span class="inline-block mr-3 mt-0.5 text-white font-mono"
                 >[✓]</span
@@ -254,8 +254,8 @@ export const renderLoggedInAuthorizeScreen = async (
                 </p>
               </div>
             </li>
-          `
-        )}
+          `,
+				)}
       </ul>
     </div>
     <!-- Form Section -->
@@ -356,10 +356,10 @@ export const renderLoggedInAuthorizeScreen = async (
 };
 
 export const renderLoggedOutAuthorizeScreen = async (
-  oauthScopes: {name: string; description: string}[],
-  oauthReqInfo: AuthRequest
+	oauthScopes: { name: string; description: string }[],
+	oauthReqInfo: AuthRequest,
 ) => {
-  return html`
+	return html`
     <div class="max-w-md mx-auto bg-white p-8 rounded-lg shadow-md">
       <h1 class="text-2xl font-heading font-bold mb-6 text-gray-900">
         Authorization Request
@@ -371,7 +371,7 @@ export const renderLoggedOutAuthorizeScreen = async (
         </h2>
         <ul class="space-y-2">
           ${oauthScopes.map(
-            (scope) => html`
+						(scope) => html`
               <li class="flex items-start">
                 <span class="inline-block mr-2 mt-1 text-secondary">✓</span>
                 <div>
@@ -379,8 +379,8 @@ export const renderLoggedOutAuthorizeScreen = async (
                   <p class="text-gray-600 text-sm">${scope.description}</p>
                 </div>
               </li>
-            `
-          )}
+            `,
+					)}
         </ul>
       </div>
       <form action="/approve" method="POST" class="space-y-4">
@@ -441,20 +441,21 @@ export const renderLoggedOutAuthorizeScreen = async (
 };
 
 export const renderApproveContent = async (
-  message: string,
-  status: string,
-  redirectUrl?: string
+	message: string,
+	status: string,
+	redirectUrl?: string,
 ) => {
-  return html`
+	return html`
     <div class="max-w-md mx-auto text-center">
       <div class="mb-6">
         <div
-          class="inline-flex items-center justify-center w-16 h-16 border-2 ${status ===
-          'success'
-            ? 'border-green-500 text-green-500'
-            : 'border-red-500 text-red-500'} font-mono text-2xl font-bold"
+          class="inline-flex items-center justify-center w-16 h-16 border-2 ${
+						status === "success"
+							? "border-green-500 text-green-500"
+							: "border-red-500 text-red-500"
+					} font-mono text-2xl font-bold"
         >
-          ${status === 'success' ? '[✓]' : '[✗]'}
+          ${status === "success" ? "[✓]" : "[✗]"}
         </div>
       </div>
 
@@ -483,13 +484,15 @@ export const renderApproveContent = async (
       </div>
     </div>
 
-    ${redirectUrl
-      ? raw(`<script>
+    ${
+			redirectUrl
+				? raw(`<script>
             setTimeout(() => {
         window.location.href = "${redirectUrl}"
         }, 2000);
     </script>`)
-      : ''}
+				: ""
+		}
 
     <style>
       /* Pulsing animation for loading dots */
@@ -520,40 +523,40 @@ export const renderApproveContent = async (
 };
 
 export const renderAuthorizationApprovedContent = async (
-  redirectUrl?: string
+	redirectUrl?: string,
 ) => {
-  return renderApproveContent(
-    'Authorization approved!',
-    'success',
-    redirectUrl
-  );
+	return renderApproveContent(
+		"Authorization approved!",
+		"success",
+		redirectUrl,
+	);
 };
 
 export const renderAuthorizationRejectedContent = async (
-  redirectUrl?: string
+	redirectUrl?: string,
 ) => {
-  return renderApproveContent('Authorization rejected.', 'error', redirectUrl);
+	return renderApproveContent("Authorization rejected.", "error", redirectUrl);
 };
 
 export const parseApproveFormBody = async (body: {
-  [x: string]: string | File;
+	[x: string]: string | File;
 }) => {
-  const action = body.action as string;
-  const email = body.email as string;
-  const password = body.password as string;
-  let oauthReqInfo: AuthRequest | null = null;
-  try {
-    oauthReqInfo = JSON.parse(body.oauthReqInfo as string) as AuthRequest;
-  } catch (e) {
-    oauthReqInfo = null;
-  }
+	const action = body.action as string;
+	const email = body.email as string;
+	const password = body.password as string;
+	let oauthReqInfo: AuthRequest | null = null;
+	try {
+		oauthReqInfo = JSON.parse(body.oauthReqInfo as string) as AuthRequest;
+	} catch (e) {
+		oauthReqInfo = null;
+	}
 
-  return {action, oauthReqInfo, email, password};
+	return { action, oauthReqInfo, email, password };
 };
 
 export const renderPaymentSuccessContent =
-  async (): Promise<HtmlEscapedString> => {
-    return html`
+	async (): Promise<HtmlEscapedString> => {
+		return html`
       <div class="max-w-md mx-auto p-8 text-center">
         <!-- Success Icon -->
         <div class="mb-6">
@@ -589,4 +592,4 @@ export const renderPaymentSuccessContent =
         </style>
       </div>
     `;
-  };
+	};
